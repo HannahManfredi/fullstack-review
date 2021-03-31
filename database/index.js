@@ -1,8 +1,18 @@
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/fetcher');
 
+//how do I sort
+//what do I display
+//one mongo document per repo
 let repoSchema = mongoose.Schema({
-  // TODO: your schema here!
+  _id: Number, //go with native optimizations
+  github_id: Number, //i don't control, don't introduce potential GH bugs into my DB, no guarantee about size, etc.
+  username: String,
+  usernameId: Number,
+  url: String,
+  repos_url: String,
+  //^should be a clickable
+  stars: Number
 });
 
 let Repo = mongoose.model('Repo', repoSchema);
