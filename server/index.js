@@ -2,6 +2,7 @@ const express = require('express');
 let app = express();
 const bodyParser = require('body-parser');
 const helper = require('../helpers/github.js');
+const db = require('../database/index.js');
 
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -12,11 +13,13 @@ app.post('/repos', function (req, res) {
   for (let key in obj) {
     handle += key;
   }
-  console.log('handle: ', handle); //string
+  console.log('handle: ', handle);
   let repos = helper.getReposByUsername(handle, () => {
     console.log('successfully pinged GitHub Api YAAAYAYYAYAYAY!!!!!!!');
   });
-  // save the repo information in the database
+  db.save(repos, () => {
+    console.log('repos successfully saved into mongo db');
+  });
 });
 
 app.get('/repos', function (req, res) {
