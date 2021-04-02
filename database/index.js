@@ -1,5 +1,10 @@
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/fetcher');
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log('we are connected!');
+});
 
 let repoSchema = mongoose.Schema({
   github_id: Number,
@@ -10,32 +15,33 @@ let repoSchema = mongoose.Schema({
 
 let Repo = mongoose.model('Repo', repoSchema); //compile schema into a Model
 //An instance of a model is called a document
+//Repo = Kitten
 
-let save = (arrayOfRepoObjs) => {
+let save = (arrayOfRepoObjs, cb) => {
   console.log('save invoked inside database index.js');
+  console.log('arrayOfRepoObjs: ', arrayOfRepoObjs);
   arrayOfRepoObjs.forEach(repo => {
-    let options = {
+    let update = {
       github_id: repo.id,
       username: repo.owner.login,
       url: repo.url,
-
+      stars: repo.stargazers_count
     }
-    let document = new Repo(options);
-    Repo.create(options, function(err, document) {
-      if (err) {
-        throw err;
-      }
-    });
+    // document.save(function (err, doc) {
+    //   if (err) {
+    //     return console.error(err);
+    //   } else {
+    //     cb(doc);
+    //   }
+    // });
+    let query = {github_id: repo.id};
+    let options = {};
+    options.upsert = true;
+    let saved = Repo.findOneAndUpdate(query, update, options);
+    cb(saved);
   });
 }
 
-// const doc = await Repo.findOne();
-// console.log(doc);
-
 module.exports.save = save;
+module.exports.Repo = Repo;
 
-// Complete the save function in database/index.js. This function will save the relevant data from the GitHub API into your database.
-
-// Ensure there are no duplicate repos. If you happen to import the same repo twice, it should only show up once in your database. See the tips section about considering unique columns.
-
-//query mongo db to see if i have saved

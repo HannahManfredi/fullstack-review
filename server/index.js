@@ -16,21 +16,22 @@ app.post('/repos', function (req, res) {
   }
   let repos = () => {
     return new Promise( (resolve, reject) => {
-      let dataArray;
       helper.getReposByUsername(handle, (data) => {
-        console.log('Successfully retrieved data from GH');
-        console.log('data: ', data);
-        dataArray = data;
+        resolve(data);
       });
-      resolve(dataArray);
+
     });
   }
   repos(handle)
     .then((data) => {
-      console.log('data: ', data);
-      // db.save(data, () => {
-        //       console.log('repos successfully saved into mongo db');
-        //     });
+      console.log('data from repos: ', data);
+      db.save(data, (doc) => {
+        console.log('repo successfully saved into mongo db' + doc);
+        db.Repo.find(function (err, docs) {
+          if (err) return console.error(err);
+          console.log(docs);
+        })
+      });
     })
     .catch( (err) => {
       throw err;
