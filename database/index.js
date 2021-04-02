@@ -6,20 +6,17 @@ db.once('open', function() {
   console.log('we are connected!');
 });
 
+//url should be a clickable
 let repoSchema = mongoose.Schema({
   github_id: Number,
   username: String,
-  url: String, //should be a clickable
+  url: String,
   stars: Number
 });
 
-let Repo = mongoose.model('Repo', repoSchema); //compile schema into a Model
-//An instance of a model is called a document
-//Repo = Kitten
+let Repo = mongoose.model('Repo', repoSchema);
 
 let save = (arrayOfRepoObjs, cb) => {
-  console.log('save invoked inside database index.js');
-  console.log('arrayOfRepoObjs: ', arrayOfRepoObjs);
   arrayOfRepoObjs.forEach(repo => {
     let update = {
       github_id: repo.id,
@@ -27,13 +24,6 @@ let save = (arrayOfRepoObjs, cb) => {
       url: repo.url,
       stars: repo.stargazers_count
     }
-    // document.save(function (err, doc) {
-    //   if (err) {
-    //     return console.error(err);
-    //   } else {
-    //     cb(doc);
-    //   }
-    // });
     let query = {github_id: repo.id};
     let options = {};
     options.upsert = true;
