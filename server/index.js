@@ -3,6 +3,7 @@ let app = express();
 const bodyParser = require('body-parser');
 const helper = require('../helpers/github.js');
 const db = require('../database/index.js');
+const Promise = require('bluebird');
 
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -13,13 +14,27 @@ app.post('/repos', function (req, res) {
   for (let key in obj) {
     handle += key;
   }
-  console.log('handle: ', handle);
-  let repos = helper.getReposByUsername(handle, () => {
-    console.log('successfully pinged GitHub Api YAAAYAYYAYAYAY!!!!!!!');
-  });
-  db.save(repos, () => {
-    console.log('repos successfully saved into mongo db');
-  });
+  let repos = () => {
+    return new Promise( (resolve, reject) => {
+      let dataArray;
+      helper.getReposByUsername(handle, (data) => {
+        console.log('Successfully retrieved data from GH');
+        console.log('data: ', data);
+        dataArray = data;
+      });
+      resolve(dataArray);
+    });
+  }
+  repos(handle)
+    .then((data) => {
+      console.log('data: ', data);
+      // db.save(data, () => {
+        //       console.log('repos successfully saved into mongo db');
+        //     });
+    })
+    .catch( (err) => {
+      throw err;
+    });
 });
 
 app.get('/repos', function (req, res) {

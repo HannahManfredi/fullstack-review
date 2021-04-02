@@ -17,11 +17,11 @@ let getReposByUsername = (username, cb) => {
     params: options.headers
   })
   .then(function (response) {
-    console.log(response);
-    cb(response);
+    let reposArray = response.data;
+    cb(reposArray);
   })
   .catch(function (error) {
-    console.log(error);
+    throw(error);
   });
 
 }
