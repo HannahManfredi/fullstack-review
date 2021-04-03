@@ -23,13 +23,10 @@ app.post('/repos', function (req, res) {
   }
   repos(handle)
     .then((data) => {
-      // console.log('data: ', data);
       db.save(data, (doc) => {
         db.Repo.find(function (err, docs) {
-          let length = docs.length;
-          console.log('length: ', length); //length = 1
-          //why is it logging docs so many times?
-          //where is the data from the input handle
+          // let length = docs.length;
+          // console.log('length: ', length);
           if (err) {
             return console.error(err);
           }
@@ -45,18 +42,15 @@ app.post('/repos', function (req, res) {
 });
 
 app.get('/repos', function (req, res) {
-  let topRepos = [];
   db.Repo.find( function(err, repos) {
     if (err) {
       res.status(500).send();
     } else {
-      repos.forEach(repo => {
-        let max = -Infinity;
-        if (repo.stars >= max) {
-          topRepos.push(repo);
-        }
-      });
-      let jsonArray = JSON.stringify(topRepos);
+      let topRepos = repos.sort(function(a, b) {
+        return parseFloat(a.stars) - parseFloat(b.stars);
+      })
+      topRepos = topRepos.slice(0, 25);
+      let jsonArray = JSON.stringify(topRepos)
       res.send(jsonArray);
     }
   });

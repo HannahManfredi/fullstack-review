@@ -17,8 +17,7 @@ class App extends React.Component {
 
   componentDidMount() {
     console.log('inside component did mount');
-    let data = this.getRepos();
-    //append data to DOM
+    this.getRepos();
   }
 
   getRepos() {
@@ -28,6 +27,9 @@ class App extends React.Component {
       url: "http://localhost:1128/repos",
       success: function(data) {
         console.log('data from get request: ', data);
+        console.log(typeof data);
+        let topTwentyFiveRepos = JSON.parse(data);
+        console.log('data length: ', topTwentyFiveRepos.length);
         //if it's an array of repo objs
           //update state of repos
       }
