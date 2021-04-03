@@ -19,18 +19,19 @@ app.post('/repos', function (req, res) {
       helper.getReposByUsername(handle, (data) => {
         resolve(data);
       });
-
     });
   }
   repos(handle)
     .then((data) => {
-      console.log('data from repos: ', data);
+      console.log('data: ', data);
       db.save(data, (doc) => {
-        console.log('repo successfully saved into mongo db' + doc);
         db.Repo.find(function (err, docs) {
-          if (err) return console.error(err);
-          console.log(docs);
-        })
+          if (err) {
+            return console.error(err);
+          } else {
+            console.log('docs: ', docs);
+          }
+        });
       });
     })
     .catch( (err) => {
@@ -41,6 +42,7 @@ app.post('/repos', function (req, res) {
 app.get('/repos', function (req, res) {
   // TODO - your code here!
   // This route should send back the top 25 repos
+
 });
 
 let port = 1128;
@@ -48,7 +50,3 @@ let port = 1128;
 app.listen(port, function() {
   console.log(`listening on port ${port}`);
 });
-
-// TASK:
-// When a user types a GitHub username into the text field, use jQuery's ajax method to send a POST
-//request to /repos (you'll have to fix the bug in the Search Component first).
