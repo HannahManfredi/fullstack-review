@@ -23,10 +23,9 @@ app.post('/repos', function (req, res) {
   }
   repos(handle)
     .then((data) => {
+      console.log('data: ', data);
       db.save(data, (doc) => {
         db.Repo.find(function (err, docs) {
-          // let length = docs.length;
-          // console.log('length: ', length);
           if (err) {
             return console.error(err);
           }

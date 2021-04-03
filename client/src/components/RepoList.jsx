@@ -4,18 +4,17 @@ const RepoList = (props) => (
   <div>
     <h4> Repo List Component </h4>
     There are {props.repos.length} repos.
-    {props.repos.map(repo => {
+    {props.repos.map((repo, index) => {
       return (
         <table>
           <thead>
         <tr>
-          <th>Repo</th>
+          <th>{index} {repo.name} </th>
         </tr>
           </thead>
           <tbody>
             <tr>
-              <td>{repo.username}</td>
-              <td>{repo.url}</td>
+              <td><a href={repo.url}>{repo.url}</a>by {repo.username}</td>
             </tr>
           </tbody>
         </table>

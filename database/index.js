@@ -7,6 +7,7 @@ db.on('connected', () => { console.log('connected'); });
 //url should be a clickable
 let repoSchema= new mongoose.Schema({
   github_id: Number,
+  name: String,
   username: String,
   url: String,
   stars: Number
@@ -15,11 +16,11 @@ let repoSchema= new mongoose.Schema({
 let Repo = mongoose.model('Repo', repoSchema);
 
 let save = (arrayOfRepoObjs, cb) => {
-  // console.log('arrayOfRepoObjs: ', arrayOfRepoObjs);
   arrayOfRepoObjs.forEach(repo => {
     let stargazers = repo.stargazers_count;
     let update = {
       github_id: repo.id,
+      name: repo.name,
       username: repo.owner.login,
       url: repo.url,
       stars: stargazers
