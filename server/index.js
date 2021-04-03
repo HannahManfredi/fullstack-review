@@ -6,33 +6,21 @@ const db = require('../database/index.js');
 const Promise = require('bluebird');
 
 app.use(express.static(__dirname + '/../client/dist'));
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false}))
 
 app.post('/repos', function (req, res) {
-  let obj = JSON.parse(JSON.stringify(req.body));
-  let handle = '';
-  for (let key in obj) {
-    handle += key;
-  }
   let repos = () => {
     return new Promise( (resolve, reject) => {
-      helper.getReposByUsername(handle, (data) => {
+      helper.getReposByUsername(req.body.username, (data) => {
         resolve(data);
       });
     });
   }
-  repos(handle)
+  repos(req.body.username)
     .then((data) => {
-      console.log('data: ', data);
       db.save(data, (doc) => {
-        db.Repo.find(function (err, docs) {
-          if (err) {
-            return console.error(err);
-          }
-          else {
-            console.log('docs: ', docs);
-          }
-        });
+        res.status(201).send();
       });
     })
     .catch( (err) => {
@@ -41,6 +29,7 @@ app.post('/repos', function (req, res) {
 });
 
 app.get('/repos', function (req, res) {
+  console.log('inside app.get')
   db.Repo.find( function(err, repos) {
     if (err) {
       res.status(500).send();
@@ -52,8 +41,8 @@ app.get('/repos', function (req, res) {
       topRepos.forEach(repo => {
         let oldUrl = repo.url;
         let newUrlOne = oldUrl.slice(0, 8);
-        let newUrlTwo = oldUrl.slice(12, 23);
-        let newUrlThree = oldUrl.slice(29);
+        let newUrlTwo = oldUrl.slice(8, 23);
+        let newUrlThree = oldUrl.slice(23);
         let updatedUrl = newUrlOne + newUrlTwo + newUrlThree;
         repo.url = updatedUrl;
       });

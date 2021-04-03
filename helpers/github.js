@@ -2,10 +2,7 @@ const axios = require('axios');
 const config = require('../config.js');
 
 let getReposByUsername = (username, cb) => {
-  let parsedUsername = JSON.parse(username);
-  let serverUrl = 'https://api.github.com/users/';
-  let endpoint = parsedUsername + '/repos';
-  let url = serverUrl + endpoint;
+  let url = `https://api.github.com/users/${username}/repos`
   let options = {
     url: url,
     headers: {
