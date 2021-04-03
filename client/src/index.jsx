@@ -17,21 +17,24 @@ class App extends React.Component {
 
   componentDidMount() {
     console.log('inside component did mount');
-    this.getRepos();
+    this.getRepos((data) => {
+      this.setState({
+        repos: data
+      });
+    });
+    console.log(this.state.repos);
   }
 
-  getRepos() {
+  getRepos(cb) {
     console.log(`inside get repos`);
+    let topTwentyFiveRepos = [];
     $.ajax({
       type: "GET",
       url: "http://localhost:1128/repos",
       success: function(data) {
-        console.log('data from get request: ', data);
-        console.log(typeof data);
-        let topTwentyFiveRepos = JSON.parse(data);
-        console.log('data length: ', topTwentyFiveRepos.length);
-        //if it's an array of repo objs
-          //update state of repos
+        topTwentyFiveRepos = JSON.parse(data);
+        console.log('topTwentyFiveRepos: ', topTwentyFiveRepos);
+        cb(topTwentyFiveRepos);
       }
     });
   }
