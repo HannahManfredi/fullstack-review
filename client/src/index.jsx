@@ -11,7 +11,27 @@ class App extends React.Component {
       isLoaded: false,
       repos: []
     }
+    this.getRepos = this.getRepos.bind(this);
     this.search = this.search.bind(this);
+  }
+
+  componentDidMount() {
+    console.log('inside component did mount');
+    let data = this.getRepos();
+    //append data to DOM
+  }
+
+  getRepos() {
+    console.log(`inside get repos`);
+    $.ajax({
+      type: "GET",
+      url: "http://localhost:1128/repos",
+      success: function(data) {
+        console.log('data from get request: ', data);
+        //if it's an array of repo objs
+          //update state of repos
+      }
+    });
   }
 
   search (term) {

@@ -23,12 +23,17 @@ app.post('/repos', function (req, res) {
   }
   repos(handle)
     .then((data) => {
-      console.log('data: ', data);
+      // console.log('data: ', data);
       db.save(data, (doc) => {
         db.Repo.find(function (err, docs) {
+          let length = docs.length;
+          console.log('length: ', length); //length = 1
+          //why is it logging docs so many times?
+          //where is the data from the input handle
           if (err) {
             return console.error(err);
-          } else {
+          }
+          else {
             console.log('docs: ', docs);
           }
         });
@@ -40,9 +45,21 @@ app.post('/repos', function (req, res) {
 });
 
 app.get('/repos', function (req, res) {
-  // TODO - your code here!
-  // This route should send back the top 25 repos
-
+  let topRepos = [];
+  db.Repo.find( function(err, repos) {
+    if (err) {
+      res.status(500).send();
+    } else {
+      repos.forEach(repo => {
+        let max = -Infinity;
+        if (repo.stars >= max) {
+          topRepos.push(repo);
+        }
+      });
+      let jsonArray = JSON.stringify(topRepos);
+      res.send(jsonArray);
+    }
+  });
 });
 
 let port = 1128;
