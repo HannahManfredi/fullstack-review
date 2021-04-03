@@ -14,7 +14,7 @@ const RepoList = (props) => (
           </thead>
           <tbody>
             <tr>
-              <td><a href={repo.url}>{repo.url}</a>by {repo.username}</td>
+              <td>stars {repo.stars}<a href={repo.url}>{repo.url}</a>by {repo.username}</td>
             </tr>
           </tbody>
         </table>

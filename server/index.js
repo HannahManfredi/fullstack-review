@@ -46,7 +46,7 @@ app.get('/repos', function (req, res) {
       res.status(500).send();
     } else {
       let topRepos = repos.sort(function(a, b) {
-        return parseFloat(a.stars) - parseFloat(b.stars);
+        return parseFloat(b.stars) - parseFloat(a.stars);
       })
       topRepos = topRepos.slice(0, 25);
       let jsonArray = JSON.stringify(topRepos)
