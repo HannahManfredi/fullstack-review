@@ -13,30 +13,27 @@ class App extends React.Component {
     }
     this.getRepos = this.getRepos.bind(this);
     this.search = this.search.bind(this);
-    this.makeUrlClickable = this.makeUrlClickable.bind(this);
+    // this.makeUrlClickable = this.makeUrlClickable.bind(this);
   }
 
   componentDidMount() {
-    console.log('inside component did mount');
     this.getRepos((data) => {
-      // this.makeUrlClickable(data, (clickableData) => {
         this.setState({
           repos: data
         });
-      // })
     });
   }
 
-  makeUrlClickable(data, cb) {
-    console.log('data inside clickable: ', data);
-    data.forEach(repo => {
-      console.log('repo: ', repo);
-      let clickable = repo.url.replace(/(\s)(http:\/\/[^\s]+)(\s)/g, '$1<a href="$2">$2</a>$3');
-      repo.url = clickable;
-      console.log(repo.url);
-    });
-    cb(data);
-  }
+  // makeUrlClickable(data, cb) {
+  //   console.log('data inside clickable: ', data);
+  //   data.forEach(repo => {
+  //     console.log('repo: ', repo);
+  //     let clickable = repo.url.replace(/(\s)(http:\/\/[^\s]+)(\s)/g, '$1<a href="$2">$2</a>$3');
+  //     repo.url = clickable;
+  //     console.log(repo.url);
+  //   });
+  //   cb(data);
+  // }
 
   getRepos(cb) {
     console.log(`inside get repos`);
