@@ -49,6 +49,14 @@ app.get('/repos', function (req, res) {
         return parseFloat(b.stars) - parseFloat(a.stars);
       })
       topRepos = topRepos.slice(0, 25);
+      topRepos.forEach(repo => {
+        let oldUrl = repo.url;
+        let newUrlOne = oldUrl.slice(0, 8);
+        let newUrlTwo = oldUrl.slice(12, 23);
+        let newUrlThree = oldUrl.slice(29);
+        let updatedUrl = newUrlOne + newUrlTwo + newUrlThree;
+        repo.url = updatedUrl;
+      });
       let jsonArray = JSON.stringify(topRepos)
       res.send(jsonArray);
     }
